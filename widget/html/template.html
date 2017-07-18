@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+	    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	    <title>demo</title>
+	    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+	    <link rel="stylesheet" type="text/css" href="../css/mui/mui.min.css"/>
+	    <link rel="stylesheet" type="text/css" href="../css/app.css"/>
+	</head>
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav" >
+			<a class="mui-icon mui-icon-left-nav mui-pull-left" v-tap="{methods:back}"></a>
+			<h1 class="mui-title">demo</h1>
+		</header>
+		<script type="text/javascript" src="../script/api.js"></script>
+		<script type="text/javascript" src="../script/vue.js" ></script>
+		<script type="text/javascript" src="../script/common.js" ></script>
+		<script>
+			var vm = new Vue({
+				el:"#header",
+				data:{},
+				methods:{
+					back:function(){
+						api.closeWin();
+					}
+				}
+			})
+			var apiready = function(){
+				fixStatusBar_API($api.dom("header"));
+				var headerPos = $api.offset(header);
+		        api.openFrame({
+		            name: 'template_frm',
+		            url: 'template_frm.html',
+		            bounces: false,
+		            rect: {
+		                x: 0,
+		                y: headerPos.h,
+		                w: 'auto',
+		                h: 'auto'
+		            },
+		            pageParam: {
+			            child: api.pageParam.child
+			        },
+		        });
+			}
+		</script>
+	</body>
+</html>

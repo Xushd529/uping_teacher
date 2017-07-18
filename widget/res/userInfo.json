@@ -1,0 +1,18 @@
+{
+	"account": "S00020003",
+	"bing": null,
+	"clientid": "",
+	"createTime": null,
+	"delflag": 0,
+	"headImg": "http://oss.uping.wang/headimg/20160918102401.png",
+	"id": 3,
+	"name": "盛东",
+	"password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+	"phone": 13354239889,
+	"roleId": null,
+	"schoolId": "S0002",
+	"sex": 0,
+	"spell": "shengdong",
+	"status": 1,
+	"token": ""
+}

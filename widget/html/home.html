@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>首页</title>
+	<link rel="stylesheet" type="text/css" href="../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../css/mui/mui.min.css" />
+	<link rel="stylesheet" type="text/css" href="../css/iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css" />
+
+	<style>
+		.mui-backdrop {
+			background-color: rgba(0, 0, 0, .0);
+		}
+
+		.item {
+			height: 0.5rem;
+			line-height: 0.5rem;
+			margin-left: 0.1rem;
+			float: left;
+			font-size: 0.28rem;
+			color: #1C7971
+		}
+
+		.title {
+			background: #FFF;
+			height: 0.5rem;
+			line-height: 0.5rem;
+		}
+
+		.title:before {
+			content: '';
+			height: 0.4rem;
+			margin-top: 0.04rem;
+			margin-left: 0.02rem;
+			width: 0.1rem;
+			background: #1C7971;
+			display: inline-block;
+			float: left;
+		}
+
+		.news.mui-table-view .mui-media-object {
+			line-height: 0.9rem;
+			width: 2rem;
+			max-width: 2rem;
+	    height: 1.28rem;
+		}
+
+		.mui-media-body {
+			padding-top: 0rem;
+			font-size: 0.28rem;
+		}
+
+		.news .mui-media-body {
+			padding-top: 0rem;
+		}
+
+		.news p {
+			padding-top: 0.07rem;
+		}
+
+		.mui-ellipsis-2 {
+			font-size: 0.28rem;
+		}
+
+
+			.meta-info {
+				position: absolute;
+				left: 115px;
+				right: 15px;
+				bottom: 8px;
+				color: #8f8f94;
+			}
+
+			.meta-info .source{
+				display: inline-block;
+				font-size: 0.24rem;
+				float: right;
+			}
+
+
+
+
+	</style>
+</head>
+
+<body>
+	<div id="app">
+		<header id="header" class="mui-bar mui-bar-nav">
+			<a class="mui-icon iconfont icon-tianjia1 mui-pull-right" href="#popover"></a>
+			<h1 class="mui-title">优 评</h1>
+		</header>
+		<div class="mui-content">
+			<div id="barfix" style="height: 44px;"></div>
+			<div id="slider" class="mui-slider">
+				<div class="mui-slider-group mui-slider-loop">
+					<div class="mui-slider-item mui-slider-item-duplicate" v-for="vo in slideImg">
+						<a href="#">
+							<img :src="vo.img" :data-img='vo.img'>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="notic_list">
+				<div class="title">
+					<span class="item">通知</span>
+				</div>
+				<ul id="list" class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-cell mui-media">
+						<a class="mui-navigate-right" >
+							<div class="notice">
+								<img class="mui-media-object mui-pull-left" src="../image/school.svg">
+								<span class="absspan" id="school_num">12</span>
+							</div>
+							<div class="mui-media-body">
+								<label>学校通知</label>
+								<p class='mui-ellipsis' id="school_notice">暂无通知</p>
+							</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media">
+						<a class="mui-navigate-right">
+							<div class="notice">
+								<img class="mui-media-object mui-pull-left" src="../image/class.svg">
+								<span class="absspan" id="school_num">12</span>
+							</div>
+							<div class="mui-media-body">
+								<label>班级通知</label>
+								<p class='mui-ellipsis' id="school_notice">暂无通知</p>
+							</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media">
+						<a class="mui-navigate-right">
+							<div class="notice">
+								<img class="mui-media-object mui-pull-left" src="../image/homework.svg">
+								<span class="absspan" id="school_num">12</span>
+							</div>
+							<div class="mui-media-body">
+								<label>作业通知</label>
+								<p class='mui-ellipsis' id="school_notice">暂无通知</p>
+							</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div>
+				<div class="title">
+					<span class="item">教育焦点</span>
+				</div>
+				<ul class="mui-table-view news">
+					<li class="mui-table-view-cell mui-media" v-for="item in newsList">
+						<a v-tap="{methods:newsDetail,item:item}">
+							<img class="mui-media-object mui-pull-left" src="../image/100.svg" :data-src="item.pic">
+							<div class="mui-media-body">
+								<div class="mui-ellipsis-2">{{item.title}}</div>
+							</div>
+							<div class="meta-info">
+								<div class="source">{{item.source}}</div>
+							</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media">
+							<a v-tap="{methods:newsMore}" style="text-align:center">
+								<span>查看更多</span>
+							</a>
+					</li>
+				</ul>
+			</div>
+			<div class="bottom">
+				<img src="../image/logo.png" />
+				<p>- - - - - - - - -我是有底线的- - - - - - - - -</p>
+			</div>
+			<div id="popover" class="mui-popover menu ">
+				<div class="mui-popover-arrow"></div>
+				<ul class="mui-table-view">
+					<li class="iconfont icon-erweima" v-tap="{methods:scan}"><span>扫一扫</span></li>
+					<li class="iconfont icon-qiehuan"><span>切换</span></li>
+					<li class="iconfont icon-tongzhi"><span>发通知</span></li>
+					<li class="iconfont icon-faquanzi"><span>发圈子</span></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js"></script>
+<script type="text/javascript" src="../script/mui.min.js"></script>
+<script type="text/javascript" src="../script/app.js"></script>
+<script type="text/javascript" src="../script/async.min.js"></script>
+<script type="text/javascript" src="../script/interface.js"></script>
+<script type="text/javascript" src="../script/lazy-load-img.min.js" ></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#app',
+		data: {
+			slideImg: [],
+			newsList: []
+		},
+		methods: {
+			scan () {
+				mui('#popover').popover('toggle');
+				openWin('scan', './tool/scan.html');
+			},newsDetail (param) {
+				var item = param.item;
+				openWin('news', './home/news.html', {item:item});
+			},newsMore () {
+				openWin('news_list','./home/news_list.html',{list:this.newsList});
+			}
+		}
+	})
+
+	apiready = function() {
+		fixStatusBar_API2($api.dom('#header'), $api.dom('#barfix'));
+		//判断是否登录
+		if ($api.getStorage('token')) {
+			homeData();
+		}else{
+			//注册监听是否登录成功
+			listenLogin();
+		}
+		// 注册监听扫一扫返回结果
+		listenScan();
+
+		// 获取轮播
+		getSlide();
+	};
+
+	//注册监听是否登录成功
+	var listenLogin = function(){
+			api.addEventListener({
+				name: 'loginSuccess'
+			}, function(ret, err) {
+				homeData();
+			});
+	}
+	// 注册监听扫一扫返回结果
+	var listenScan = function(){
+			api.addEventListener({
+				name: 'scanSuccess'
+			}, function(ret, err) {
+				if (ret) {
+					var result = ret.value.key;
+					if (result.indexOf(API.scanKey) >= 0) {
+						//扫码登录
+						openWin('scanLogin', 'scanLogin.html', {
+							url: result
+						});
+					} else {
+						api.closeWin({
+							name: 'scan'
+						});
+					}
+				}
+			});
+	}
+	// 加载首页数据
+	var homeData = function() {
+			// 获取首页新闻
+			API.getNews(1,(e,r)=>{
+				if(r){
+					vm.newsList = r.data;
+					lazyLoadImg();
+				}
+			})
+			//
+
+			// 移除启动页
+		 	setTimeout(function(){
+				api.removeLaunchView({
+					animation: {
+						type: 'fade',
+						duration: 700
+					}
+				});
+			},200)
+	}
+	// 获取轮播内容
+	var getSlide = function(){
+			var slideData = $api.getStorage('slideData');
+			if (slideData) {
+				vm.slideImg = slideData
+			} else {
+				mui.getJSON('../res/slide.json', function(d) {
+					vm.slideImg = d
+				})
+			}
+			setTimeout(function() {
+				mui('#slider').slider({
+					interval: 50000
+				});
+			}, 100)
+	}
+</script>
+
+</html>

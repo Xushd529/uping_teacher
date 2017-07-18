@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html >
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>查 看</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/mui/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css"/>
+
+    <style>
+    	.mui-table-view-cell{
+    		height: 1rem;
+    		line-height: 1rem;
+    	}
+    	.mui-table-view-cell a{
+    		height: 1rem;
+    		line-height: 1rem;
+    		padding: 0px!important;
+    		padding-left: 0.3rem!important;
+    	}
+    </style>
+</head>
+<body >
+	<div id="app" >		
+		<div class="mui-content">			
+			<div id="slider" class="mui-slider" >
+				<img src='http://data.uping.wang/slide/20161003153434.png' data-img='http://data.uping.wang/slide/20161003153434.png'>
+			</div>
+			<article style="padding-bottom: 54px;">
+				<div class="list-wrap">
+					 <h4>优评</h4>
+					 <ul class="app-list">
+					 	<li>
+	                        <div class="app-wrap">
+	                            <a class="iconfont icon-hongqi">
+									<span class="text_title">红旗班</span>
+								</a>
+	                        </div>	                        
+	                    </li>
+	                    <li>
+	                        <div class="app-wrap">
+	                            <a class="iconfont icon-huodong">
+									<span class="text_title">活动</span>
+								</a>
+	                        </div>	                        
+	                    </li>
+	                    <li>
+	                        <div class="app-wrap">
+	                            <a class="iconfont icon-weidu">
+									<span class="text_title">维度</span>
+								</a>
+	                        </div>	                        
+	                    </li>
+	                    <li>
+	                        <div class="app-wrap">
+	                            <a class="iconfont icon-rongyu">
+									<span class="text_title">荣誉</span>
+								</a>
+	                        </div>	                        
+	                    </li>
+	                    <li>
+	                        <div class="app-wrap">
+	                            <a class="iconfont icon-sxddsy">
+									<span class="text_title">成绩</span>
+								</a>
+	                        </div>	                        
+	                    </li>
+	         
+					 </ul>
+				</div>
+				<div class="list-wrap">
+					<h4>优评</h4>
+					<ul class="app-list">
+					 	<li>
+	                        <div class="app-wrap">
+	                            <a class="iconfont icon-xiaoyuanquan">
+									<span class="text_title">校级圈</span>
+								</a>
+	                        </div>	                        
+	                    </li>
+	                    <li>
+	                        <div class="app-wrap">
+	                            <a class="iconfont icon-banjiquan">
+									<span class="text_title">班级圈</span>
+								</a>
+	                        </div>	                        
+	                    </li>
+	                    <li>
+	                        <div class="app-wrap">
+	                            <a class="iconfont icon-banchengyuan">
+									<span class="text_title">校同事</span>
+								</a>
+	                        </div>	                        
+	                    </li>
+	                    <li>
+	                        <div class="app-wrap">
+	                            <a class="iconfont icon-banzhuren">
+									<span class="text_title">班成员</span>
+								</a>
+	                        </div>	                        
+	                    </li>
+	                </ul>
+	           </div>
+	           
+			</article>
+			
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js" ></script>
+<script type="text/javascript" src="../script/mui.min.js" ></script>
+<script type="text/javascript" src="../script/app.js" ></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el:'#app',
+		data:{
+			
+		},
+		methods:{
+			circle:function (param) {
+				openWin('circleW','circle/circle_head.html')
+			}
+		}
+	})
+	
+	apiready = function(){
+		fixStatusBar_API2($api.dom('#header'),$api.dom('#barfix'));
+	};
+</script>
+</html>

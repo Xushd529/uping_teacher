@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+	    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	    <title>关于</title>
+	    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+	    <link rel="stylesheet" type="text/css" href="../../css/mui/mui.min.css"/>
+	    <link rel="stylesheet" type="text/css" href="../../css/app.css"/>
+	</head>
+	<body>
+		<div class="mui-content" id="app">
+			<div class="mui-content-padded">
+						<div class="qrcode" style="text-align: center;margin-bottom: 10px;margin-top: 20px;">
+							<img id="qrcode" src="../../image/loginlogo.png"  width="200"/>
+						</div>
+						<!--<h4 style="margin-top:10px;">mui</h4>-->
+						<p style="padding: 10px;line-height: 25px;">
+							优评网是一款互联网加教育管理的信息化平台，
+							旨在利用互联网手段打通学校教育、
+							家庭教育和社会教育三方教育环境，
+							运用成长动力等教育理念模型，
+							通过多元评价主体对学生综合素质进行鼓励、
+							引导式即时评价，逐步培养孩
+							子良好的行为习惯和积极向上的学习态度，激发孩子的内
+							在成长动力，让孩子由被动学习变主动学习，促进学生全
+							面发展、健康成长。
+						</p>
+						<p style="text-align: center;color: #ccc;text-indent: 0;">当前版本：<span id="version">{{version}}</span></p>
+					</div>
+		</div>
+		<script type="text/javascript" src="../../script/api.js"></script>
+		<script type="text/javascript" src="../../script/vue.min.js" ></script>
+		<script type="text/javascript" src="../../script/app.js"></script>
+		<script>
+			var vm = new Vue({
+				el:"#app",
+				data:{
+					version:''
+				},
+				methods:{
+
+				}
+			})
+			apiready = function(){
+				vm.version = api.appVersion
+			}
+		</script>
+	</body>
+</html>

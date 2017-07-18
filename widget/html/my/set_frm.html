@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+	    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	    <title>demo</title>
+	    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+	    <link rel="stylesheet" type="text/css" href="../../css/mui/mui.min.css"/>
+	    <link rel="stylesheet" type="text/css" href="../../css/app.css"/>
+	    <style>
+	    	html,
+			body {
+				background-color: #efeff4;
+			}
+			.mui-scroll-wrapper,
+			.mui-scroll {
+				background-color: #efeff4;
+			}
+			.mui-table-view {
+			    margin-top: 20px;
+			}
+			.update {
+			    font-style: normal;
+			    color: #999999;
+			    margin-right: -25px;
+			    font-size: 15px;
+			}
+			.mui-table-view-cell: a{
+	    		height: 1rem;
+	    		line-height: 1rem;
+	    		padding: 0px!important;
+	    	}
+	    </style>
+	</head>
+	<body>
+		<div class="mui-content" id="app">
+			<div class="mui-scroll">
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-cell">
+						<a href="#account" class="mui-navigate-right">账号与安全</a>
+					</li>
+				</ul>
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-cell">
+						<a href="#notifications" class="mui-navigate-right">新消息通知</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a href="#privacy" class="mui-navigate-right">隐私</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a href="#general" class="mui-navigate-right">通用</a>
+					</li>
+				</ul>
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-cell">
+						<a href="#privacy" class="mui-navigate-right">帮助与反馈</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a href="#about" class="mui-navigate-right" v-tap="{methods:about}">关于优评网</a>
+					</li>
+				</ul>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell" style="text-align: center;">
+						<a v-tap="{methods:exit}">退出登录</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../script/api.js"></script>
+		<script type="text/javascript" src="../../script/vue.min.js" ></script>
+		<script type="text/javascript" src="../../script/app.js" ></script>
+		<script type="text/javascript" src="../../script/mui.min.js" ></script>
+
+		<script>
+			var vm = new Vue({
+				el:"#app",
+				data:{},
+				methods:{
+					exit () {
+						api.confirm({
+						    title: '退出提示',
+						    msg: '确定要退出当前登录帐号吗？',
+						    buttons: ['确定', '取消']
+						}, function(ret, err) {
+						    var index = ret.buttonIndex;
+						    if(index==1){
+						    	$api.rmStorage('token')
+						    	$api.rmStorage('userInfo')
+
+						    	openWinNoAnimation('login','../login/login.html',{exit:true})
+
+						    }
+						});
+					},about () {
+							openWin('about','./about.html');
+					}
+				}
+			})
+			var apiready = function(){
+
+			}
+		</script>
+	</body>
+</html>

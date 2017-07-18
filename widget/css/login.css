@@ -1,0 +1,93 @@
+	html,
+	body {
+		font-family: "微软雅黑";
+	}
+	
+	.imglogo {
+		padding-top: 59px;
+	}
+	
+	.login {
+		border-radius: 5px;
+		margin: 10px;
+		overflow: hidden;
+	}
+	
+	.login label {
+		width: 15% !important;
+		padding-left: 5%;
+	}
+	
+	.login input {
+		width: 85% !important;
+		text-align: left;
+	}
+	
+	.content {
+		width: 95%;
+		margin: 0 auto;
+		margin-top: 15px;
+	}
+	
+	.mui-input-group .mui-input-row:after {
+		left: 0;
+	}
+	
+	.mui-input-group:before,
+	.mui-input-group:after {
+		height: 0;
+	}
+	
+	.mui-content-padded {
+		margin: 10px 10px;
+	}
+	
+	.mui-content-padded button {
+		height: 45px;
+		line-height: 15px;
+		background: #1ca095;
+		color: white;
+		border-color: #1ca095;
+	}
+	
+	.mui-input-group .mui-input-row {
+		height: 50px;
+
+	}
+	
+	.link-area {
+		overflow: hidden;
+	}
+	
+	.link-area a {
+		float: right;
+		color: #000;
+	}
+	
+	.imglogo {
+		display: block;
+		width: 70%;
+		margin: 0 auto;
+		margin-bottom: 20px;
+	}
+	
+	.loginbtn:active {
+		background: #1c7971 !important;
+	}
+	
+	input[type="text"],
+	input[type="password"] {
+		height: 50px !important;
+	}
+	
+	.mui-input-row label {
+		line-height: 2.1 !important;
+	}
+	
+	.mui-input-row .mui-input-password~.mui-icon-eye {
+		top: 15px;
+	}
+	
+	.mui-input-row .mui-input-clear~.mui-icon-clear {
+		top: 15px;
+	}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>demo</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/mui/mui.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/app.css" />
+	<style>
+
+	</style>
+</head>
+
+<body>
+	<header id="header" class="mui-bar mui-bar-nav">
+		<a class="mui-icon mui-icon-left-nav mui-pull-left" v-tap="{methods:back}"></a>
+		<h1 class="mui-title">扫一扫</h1>
+	</header>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/vue.js"></script>
+	<script type="text/javascript" src="../../script/app.js"></script>
+	<script>
+		var vm = new Vue({
+			el: "#header",
+			data: {},
+			methods: {
+				back () {
+					api.closeWin();
+				}
+			}
+		})
+		var headerPos = null
+		var apiready = function() {
+			fixStatusBar_API($api.dom("header"));
+			headerPos = $api.offset(header).h;
+			openScanView();
+
+		}
+		var FNScanner = null
+			//打开扫码区
+		var openScanView = function(h) {
+				FNScanner = api.require('FNScanner');
+				var frameWidth = api.frameWidth;
+				var frameHeight = api.frameHeight;
+				FNScanner.openView({
+					rect: {
+						x: 0,
+						y: headerPos,
+						w: frameWidth,
+						h: frameHeight - headerPos,
+					},
+					autorotation: true,
+				}, function(ret, err) {
+					if (ret) {
+						if (ret.eventType == "show") {
+							openscanline();
+						}
+						if (ret.eventType == "success") {
+							api.sendEvent({
+							    name: 'scanSuccess',
+							    extra: {
+							        key: ret.content
+							    }
+							});
+						}
+					} else {
+						$api.toastS('sacn error');
+						api.closeWin();
+					}
+				});
+			}
+			//打开扫码线页面
+		var openscanline = function(w, h) {
+			api.openFrame({
+				name: 'scan_frm',
+				url: './scan_frm.html',
+				rect: {
+					x: 0,
+					y: headerPos,
+					w: 'auto',
+					h: 'auto'
+				},
+				bgColor: 'rgba(0,0,0,0.1)',
+				vScrollBarEnabled: false,
+				hScrollBarEnabled: false
+			});
+		}
+	</script>
+</body>
+
+</html>

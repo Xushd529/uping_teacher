@@ -1,0 +1,74 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="tephone=no,email=no,date=no,address=no">		
+	</head>
+	<body>	
+	</body>
+</html>
+<script type="text/javascript">
+	var photoBrowser;
+	apiready = function() {
+		var arry = api.pageParam.arry
+		var now = api.pageParam.index
+		photoBrowser = api.require('photoBrowser')
+		photoBrowser.open({
+			images : arry,
+			activeIndex : now,
+			placeholderImg : 'widget://image/logo.png',
+			bgColor : '#000'
+		}, function(ret) {
+			
+			if (ret.eventType == 'show') {				
+				api.openFrame({
+					name : 'imgview_frm',
+					url : './imgview_frm.html',
+					rect : {
+						x : 0,
+						y : 0,
+						w : api.winWidth,
+						h : 64
+					},
+					pageParam:{total:arry.length,index:now}
+				});
+			}
+			if(ret.eventType == 'change'){
+				api.sendEvent({
+				    name: 'imgchange',
+				    extra: {
+				        index: ret.index				     
+				    }
+				});
+			}
+			if(ret.eventType == 'click'){
+				api.sendEvent({
+				    name: 'imgclick'
+				});
+			}
+			
+		});
+		api.addEventListener({name: 'imgsave'}, function(ret, err) {
+		   var now = ret.value.index-1
+		   saveImg(now)
+		});
+	};
+	
+	var saveImg = function(now) {
+		photoBrowser.getImage({
+			index : now
+		}, function(ret) {
+			api.saveMediaToAlbum({
+			    path: ret.path
+			}, function(ret, err) {
+			    if (ret && ret.status) {
+			        alert('保存成功');
+			    } else {
+			        alert('保存失败');
+			    }
+			});
+			
+		});
+	}	
+
+</script>

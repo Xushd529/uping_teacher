@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+	    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	    <title>demo</title>
+	    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>	   
+	</head>
+	<body>		
+		<script type="text/javascript" src="../../script/api.js"></script>
+		<script>		
+			var apiready = function(){					
+				   			   
+		        api.openFrame({
+		            name: 'login_frm',
+		            url: 'login_frm.html',
+		            bounces: false,
+		            rect: {
+		                x: 0,
+		                y: 0,
+		                w: 'auto',
+		                h: 'auto'
+		            }
+		        });
+		        var exit = api.pageParam.exit
+		        if(exit){
+		        	api.sendEvent({
+					    name: 'tbChange',
+					    extra: {
+					        index: 0
+					    }
+					});
+		        	api.closeWin({name:'set'})
+		        }
+		        //防止返回
+		        api.addEventListener({
+				    name: 'keyback'
+				}, function(ret, err) {
+				    //alert('按了返回键');
+				    api.confirm({
+					    title: '退出提示',
+					    msg: '确定要退出程序吗？',
+					    buttons: ['确定', '取消']
+					}, function(ret, err) {
+					    var index = ret.buttonIndex;
+					    if(index==1){					    	
+					    	api.closeWidget({
+								id : api.appId,
+								retData : {
+								name : 'closeWidget'
+								},
+								silent : true
+							});
+					    }
+					});
+				});
+			}
+		</script>
+	</body>
+</html>

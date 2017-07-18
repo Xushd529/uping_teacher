@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>登录学校端</title>
+	<link rel="stylesheet" type="text/css" href="../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../css/mui/mui.min.css" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css" />
+	<style>
+		.mui-content {
+			background: #F2F2F2;
+			height: 100%;
+			text-align: center;
+		}
+
+		.mui-content img {
+			width: 180px;
+			padding-top: 30px;
+			padding-bottom: 30px;
+		}
+
+		.mui-btn-green,
+		.mui-btn-positive,
+		.mui-btn-success {
+			color: #fff;
+			border: 1px solid #1ca095;
+			background-color: #1ca095;
+		}
+
+		.mui-btn-block {
+			font-size: 18px;
+			display: block;
+			width: 80%;
+			margin-bottom: 10px;
+			padding: 10px 0;
+			margin: 0 auto;
+		}
+	</style>
+</head>
+
+<body style="height: 100%;">
+	<div class="mui-content" id="app">
+		<img src="../image/compute.svg">
+		<p style="color: #242424;font-weight: 500;font-size: 16px;">优评网学校端登录确认</p>
+		<p>为保障账户安全，请确保是本人操作</p>
+		<div class="mui-card-content-inner">
+			<button type="button" class="mui-btn mui-btn-block mui-btn-green" v-tap="{methods:login}">确  认</button>
+		</div>
+	</div>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/vue.min.js"></script>
+	<script type="text/javascript" src="../script/app.js"></script>
+	<script type="text/javascript" src="../script/mui.min.js"></script>
+	<script type="text/javascript" src="../script/interface.js"></script>
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				token: ''
+			},
+			methods: {
+				login: function() {
+					if (this.token) {
+						API.webLogin(this.token,(e,r)=>{
+							if(e){
+								$api.toastS(e);
+							}else{
+								$api.toastS('登录成功');
+								api.closeWin();
+							}
+						})
+					}
+				},scanSuccess(){
+					API.scanSuccess(this.token)
+				}
+			}
+		})
+		var apiready = function() {
+			var url = api.pageParam.url;
+			var token = url.split('/')[5];
+			vm.token = token;
+			vm.scanSuccess();
+			api.closeWin({name: 'scan'});
+		}
+
+	</script>
+</body>
+
+</html>

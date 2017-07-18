@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>绑定手机号</title>
+		<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/app.css" />
+		<style>
+			.btnbind {
+				width: 90%;
+				margin: 0 auto;
+				margin-top: 20px;
+				padding: 10px;
+				display: block;
+				border-radius: 3px;
+				background: #1ca095;
+				font-size: 16px;
+				text-align: center;
+				color: #fff;
+				border: 1px solid #1c7971;
+			}			
+			.btnbind:active {
+				background: #1ca095 !important;
+				border-color: #1c7971 !important;
+				color: #fff;
+			}			
+			.inputButton:active {
+				background: #1ca095 !important;
+			}			
+			.inputButton {
+				background: #1ca095!important;
+				color: #FFF!important;
+			}			
+			.inputYanzhengma {
+				width: 60%!important;
+				float: left;
+				border-top-right-radius: 0;
+				border-bottom-right-radius: 0;
+				border-right: none;
+			}			
+			.inputButton {
+				width: 40%;
+				float: right;
+				height: 40px;
+				border-top-left-radius: 0;
+				border-bottom-left-radius: 0;
+				background: #1ca095;
+				color: #fff;
+			}			
+			.mui-input-group {
+				margin: 20px 10px;
+			}
+			.inputButton{
+				border:1px solid #1ca095!important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content" id="app">
+			<transition name="fade">
+				<form id='login-form' class="mui-input-group">
+					<div class="mui-input-row input">
+						<input type="tel" v-model='phone' class="mui-input-clear mui-input" placeholder="11位手机号" maxlength="11">
+					</div>
+					<div class="mui-input-row input">
+						<input class="inputYanzhengma" type="tel" v-model='vercode' placeholder="验证码" maxlength="4">
+						<button class="inputButton" v-tap="{methods:sendVercode}" :disabled="time > 0">{{text}}</button>
+					</div>
+				</form>
+			</transition>			
+			<div>
+				<a class="btnbind" v-tap="{methods:next}">{{btn}}</a>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/vue.js"></script>
+	<script type="text/javascript" src="../../script/mui.min.js"></script>
+	<script type="text/javascript" src="../../script/app.js"></script>
+	<script type="text/javascript" src="../../script/interface.js"></script>
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				phone: '',
+				vercode: '',			
+				btn: '绑定',
+				time: -1
+			},
+			methods: {
+				sendVercode: function() {
+					input_blur()
+					if(this.verify()) {
+						API.sendcode(this.phone, function(e, r) {
+							if(e) {
+								$api.toastS(e)
+							} else {
+								$api.toastS('验证码发送成功，请注意查收')
+								vm.time = 120
+								vm.timer()
+							}
+						})
+					}
+				},
+				timer: function() {
+					if(this.time > 0) {
+						this.time = this.time - 1
+						setTimeout(this.timer, 1000)
+					}
+				},
+				next: function() {
+					input_blur()
+					if(this.verify()) {
+						if(!this.vercode){
+							$api.toastS('请输入验证码')
+							return
+						}
+						API.checkcode(this.phone, this.vercode, function(e, r) {
+							if(e) {
+								$api.toastS(e)
+							} else {
+								
+								API.bindphone(userInfo.account,vm.phone,function(e,r){
+									if(e){
+										$api.toastS(e)
+									}else{
+										vm.time = -1
+										userInfo.bing=1
+										$api.setStorage('token',token)
+										$api.setStorage('userInfo',userInfo)
+										//发送登录成功消息
+										api.sendEvent({
+										    name: 'loginSuccess'
+										});
+										Loading()
+									}
+								})								
+							}
+						})
+					}
+				},
+				verify: function() {
+					if(!this.phone) {
+						$api.toastS('请输入11位手机号')
+						return false
+					}
+					if(!(/^1[34578]\d{9}$/.test(this.phone))) {
+						$api.toastS('请输入正确的手机号');
+						return false
+					}
+					return true
+				}
+			},
+			computed: {
+				text: function() {
+					if(this.time < 0) {
+						return '获取验证码';
+					} else if(this.time == 0) {
+						return '重新发送';
+					} else {
+						return this.time > 0 ? this.time + 's后，重新发送' : '重新发送'
+					}
+
+				}
+			}
+		})
+		var userInfo = null,token =null
+		var apiready = function() {
+			userInfo = api.pageParam.userInfo
+			token = api.pageParam.token
+			//监听关闭此页消息
+			api.addEventListener({
+			    name: 'loginClose'
+			}, function(ret, err) {
+			    HideLoading()
+			    api.closeToWin({
+				    name: 'root'
+				});
+			});
+		}
+	</script>
+
+</html>

@@ -1,0 +1,15 @@
+<svg width="200" height="100" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+ <g>
+  <title>background</title>
+  <rect fill="#cccccc" id="canvas_background" height="102" width="202" y="-1" x="-1"/>
+  <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
+   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <text font-weight="normal" xml:space="preserve" text-anchor="start" font-family="Euphoria, sans-serif" font-size="26" id="svg_1" y="44.5" x="60.671875" stroke-width="0" stroke="#000" fill="#7f7f7f">优评网</text>
+  <text style="cursor: move;" xml:space="preserve" text-anchor="start" font-family="Euphoria, sans-serif" font-size="18" id="svg_2" y="70" x="49.460938" stroke-width="0" stroke="#000" fill="#666666">uping.wang</text>
+ </g>
+</svg>

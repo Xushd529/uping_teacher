@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+	    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	    <title>登录</title>
+	    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+	    <link rel="stylesheet" type="text/css" href="../../css/mui/mui.min.css"/>
+	    <link rel="stylesheet" type="text/css" href="../../css/login.css">
+	</head>
+	<body>
+		<div  id="app" class="mui-content">			
+			<img id="imglogo" class="imglogo" src="../../image/loginlogo.png" width="70%">
+			<form id='login-form' class="mui-input-group login">
+				<div class="mui-input-row">
+					<label><img src="../../image/user.png" width="20" height="20"></label>
+					<input v-model='account' type="text" class="mui-input-clear mui-input" placeholder="初始帐号/手机号">
+				</div>
+				<div class="mui-input-row mui-password">
+					<label><img src="../../image/password.png" width="20" height="20"></label>
+					<input v-model='pass' type="password" class="mui-input-password mui-input" placeholder="密码">
+				</div>
+			</form>
+			<div class="mui-content-padded">
+				<button id='login' class="mui-btn mui-btn-block loginbtn" v-tap="{methods:login}">登录</button>
+				<a id="forget" style="float:right;font-size:14px;color:#666;margin-top: 10px;display: block;" v-tap="{methods:forget}">忘记密码？</a>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../script/api.js"></script>
+		<script type="text/javascript" src="../../script/vue.js" ></script>
+		<script type="text/javascript" src="../../script/app.js" ></script>
+		<script type="text/javascript" src="../../script/mui.min.js" ></script>
+		<script type="text/javascript" src="../../script/interface.js" ></script>
+		<script type="text/javascript" src="../../script/sha256.js" ></script>
+		<script>
+			var vm = new Vue({
+				el:"#app",
+				data:{
+					account:'',
+					pass:''
+				},
+				methods:{
+					login:function(){
+						input_blur()
+						if(!this.account){
+							$api.toastS('请输入初始帐号或手机号')
+							return
+						}
+						if(!this.pass){
+							$api.toastS('请输入密码')
+							return
+						}
+						var param = {
+							account:this.account,
+							password:sha256.digest(this.pass)
+						}					
+						API.login(param,function(e,r){
+							if(e){
+								$api.toastS(e)
+							}else{
+									
+								//未绑定手机号跳转到绑定手机号
+								if(!r.data.bing){
+									openWin('bind','./bind.html',{token:r.message,userInfo:r.data})
+								}else{
+									$api.setStorage('userInfo',r.data)
+									$api.setStorage('token',r.message)	
+									//发送登录成功消息
+									api.sendEvent({
+									    name: 'loginSuccess'
+									});
+									Loading()
+								}
+								
+								
+							}
+						})
+						
+					},forget:function(){
+						input_blur()
+						openWin('forget','./forget.html')
+					}
+				}
+			})
+			var apiready = function(){
+				api.removeLaunchView({
+				    animation: {
+				        type: 'fade',
+				        duration: 700
+				    }
+				});
+				//监听关闭登录页消息
+				api.addEventListener({
+				    name: 'loginClose'
+				}, function(ret, err) {					
+				    HideLoading()
+				    api.closeToWin({
+					    name: 'root'
+					});
+				});
+				
+			}
+		</script>
+	</body>
+</html>

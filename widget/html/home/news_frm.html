@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>新闻详情</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/mui/mui.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/app.css" />
+	<style>
+		.mui-content img {
+			width: 100%;
+		}
+
+		.primary .content p {
+			line-height: 0.4rem;
+			word-wrap: break-word;
+			margin-bottom: 15px;
+			text-align: justify;
+			font-size: 16px;
+		}
+
+		.primary>.content {
+			padding-bottom: 15px;
+			border-bottom: 1px solid #e0e0e0;
+		}
+
+		.primary {
+			padding: 5px 12px 0 12px;
+		}
+
+		.primary .title {
+			font-size: 0.4rem;
+			color: #333;
+			padding: 17px 0 6px;
+			line-height: 30px;
+		}
+
+		.primary .meta {
+			font-size: .25rem;
+			color: #888;
+			line-height: 1.125rem;
+			overflow: hidden;
+		}
+
+		.primary .author {
+			height: 1rem;
+			float: left;
+		}
+
+		.primary .time {
+			font-size: .25rem;
+			display: inline-block;
+			margin-right: 10px;
+			overflow: hidden;
+			float: right;
+			;
+			font-family: Helvetica;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="mui-content primary" id="app">
+		<h1 class="title">{{title}}</h1>
+		<div class="meta">
+			<div class="author">{{source}}</div>
+			<div class="time" id="subtime">{{time}}</div>
+		</div>
+		<div class="content" v-html='content'></div>
+	</div>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/vue.js"></script>
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				content: "",
+				title: '',
+				source: '',
+				time: ''
+			},
+			methods: {
+
+			}
+		})
+		var apiready = function() {
+			var item = api.pageParam.item;
+
+			vm.title = item.title;
+			vm.source = item.source;
+			vm.time = item.pubDate;
+			vm.content = item.content;
+		}
+	</script>
+</body>
+
+</html>

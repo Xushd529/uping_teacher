@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>发布圈子</title>
+		<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/app.css" />
+		<style>
+			.content {
+				height: 2rem;
+			}
+			
+			textarea {
+				border: none;
+				font-size: 0.28rem;
+			}
+			
+			.image-list {
+				width: 100%;
+				min-height: 1.45rem;
+			}
+			
+			.image-list .space {
+				border: 1px dashed #C0C0C0;
+			}
+			
+			.image-list .image-item {
+				float: left;
+				position: relative;
+			}
+			
+			.image-item {
+				padding-top: 0.04rem;
+				padding-left: 0.15rem;
+				padding-right: 0.09rem;
+				padding-bottom: 0.04rem;
+			}
+			
+			.image-item .image img {
+				height: 1.35rem;
+				width: 1.35rem;
+			}
+			
+			.image-close {
+				background: #FFF;
+				background: url(../../image/error.svg);
+				background-size: 0.35rem 0.35rem;
+				position: absolute;
+				border-radius: 50%;
+				height: 0.35rem;
+				width: 0.35rem;
+				right: -0.02rem;
+				top: -0.04rem
+			}
+			
+			.location {
+				padding: 0.1rem;
+			}
+			
+			.location:after {
+				content: "";
+				width: 100%;
+				height: 1px;
+				background: rgba(0, 0, 0, .2);
+				position: absolute;
+				left: 0;
+				bottom: 0;
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+			}
+			
+			.location:before {
+				content: '';
+				background: url(../../image/location.svg);
+				background-size: 100%;
+				margin-top: 0.1rem;
+				width: 0.4rem;
+				height: 0.4rem;
+				position: absolute;
+			}
+			
+			.location span {
+				padding-left: 0.52rem;
+				line-height: 0.6rem;
+				width: 100%;
+				font-size: 0.28rem;
+			}
+			
+			.split {
+				background: #efeff4;
+				height: 0.3rem;
+			}
+			
+			.cho {
+				float: right;
+			}
+			
+			.choose {
+				padding: 0.1rem 0.09rem;
+				position: relative;
+			}
+			
+			.choose:before {
+				content: "";
+				width: 100%;
+				height: 1px;
+				background: rgba(0, 0, 0, .2);
+				position: absolute;
+				left: 0;
+				top: 0;
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+			}
+			
+			.choose:after {
+				content: "";
+				width: 100%;
+				height: 1px;
+				background: rgba(0, 0, 0, .2);
+				position: absolute;
+				left: 0;
+				bottom: 0;
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+			}
+			
+			.choose span {
+				padding-left: 0.09rem;
+				height: 0.6rem;
+				background: #FFF;
+				line-height: 0.6rem;
+				font-size: 0.28rem;
+			}
+		</style>
+	</head>
+
+	<body style="height: 100%;">
+		<div class="mui-content" id="app">
+			<div class="row mui-input-row">
+				<textarea v-model='content' class="mui-input-clear content" placeholder="此刻你的想法" maxlength="500"></textarea>
+			</div>
+			<div class="image-list">
+				<div class="image-item" v-for="(item, idex) in imgs">
+					<div class="image-close" v-tap="{methods:del,index:idex}"></div>
+					<div class="image">
+						<img :src="item" />
+					</div>
+				</div>
+				<div class="image-item" v-show='imgcount<6'>
+					<div class="image " v-tap="{methods:plusimg}">
+						<img src="../../image/plus.svg" class="space" />
+					</div>
+				</div>
+			</div>
+			<div class="row mui-input-row location" v-tap="{methods:getLocation}">
+				<span>{{locations}}</span>
+			</div>
+			<div class="split"></div>
+			<div class="choose">
+				<span>是否同步到班级圈</span>
+				<div class="mui-switch mui-switch-mini cho" v-tap="{methods:ishare}">
+					<div class="mui-switch-handle"></div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../script/api.js"></script>
+		<script type="text/javascript" src="../../script/vue.min.js"></script>
+		<script type="text/javascript" src="../../script/app.js"></script>
+		<script type="text/javascript" src="../../script/mui.min.js"></script>
+		<script type="text/javascript" src="../../script/lrz.bundle.js"></script>
+		<script type="text/javascript" src="../../script/interface.js"></script>
+		<script type="text/javascript" src="../../script/async.min.js"></script>
+		<script>
+			var vm = new Vue({
+				el: "#app",
+				data: {
+					imgcount: 0,
+					imgs: [],
+					locations: '所在位置',
+					content: '',
+					share: false
+				},
+				methods: {
+					back: function() {
+						api.closeWin();
+					},
+					plusimg: function() {
+						showAction()
+					},
+					getLocation: function() {
+						initLocation()
+					},
+					del: function(param) {
+						this.imgs.remove(param.index)
+						this.files.remove(param.index)
+						this.imgcount--
+					},
+					ishare: function() {
+						this.share = !this.share
+					}
+				},
+				computed: {
+
+				}
+			})
+			var pic = null,
+				bMap = null;
+			apiready = function() {
+				pic = api.require('UIMediaScanner');
+				bMap = api.require('bMap');
+			}
+			
+			
+			var circleSend = function(){
+				if(!vm.content && !vm.imgcount) {
+					$api.toastS('文字或图片，总得有一样吧')
+					return
+				}				
+				//先上传图片 后上传数据						
+				//依次运行,前一个函数的回调会作为后一个函数的参数，如果有任何任务通过一个错误的回调，下一个函数不执行
+				async.series([
+					function(cb) {
+						if(vm.imgs[0]) {
+							API.imgUpload(vm.imgs[0], "cicle/", function(e, r) {
+								if(e) {
+									cb(null, "")
+								} else {
+									cb(null, r.data)
+								}
+							})
+						} else {
+							cb(null, "")
+						}
+					},
+					function(cb) {
+						if(vm.imgs[1]) {
+							API.imgUpload(vm.imgs[1], "cicle/", function(e, r) {
+								if(e) {
+									cb(null, "")
+								} else {
+									cb(null, r.data)
+								}
+							})
+						} else {
+							cb(null, "")
+						}
+
+					},
+					function(cb) {
+						if(vm.imgs[2]) {
+							API.imgUpload(vm.imgs[2], "cicle/", function(e, r) {
+								if(e) {
+									cb(null, "")
+								} else {
+									cb(null, r.data)
+								}
+							})
+						} else {
+							cb(null, "")
+						}
+
+					},
+					function(cb) {
+						if(vm.imgs[3]) {
+							API.imgUpload(vm.imgs[3], "cicle/", function(e, r) {
+								if(e) {
+									cb(null, "")
+								} else {
+									cb(null, r.data)
+								}
+							})
+						} else {
+							cb(null, "")
+						}
+
+					},
+					function(cb) {
+						if(vm.imgs[4]) {
+							API.imgUpload(vm.imgs[4], "cicle/", function(e, r) {
+								if(e) {
+									cb(null, "")
+								} else {
+									cb(null, r.data)
+								}
+							})
+						} else {
+							cb(null, "")
+						}
+
+					},
+					function(cb) {
+						if(vm.imgs[5]) {
+							API.imgUpload(vm.imgs[5], "cicle/", function(e, r) {
+								if(e) {
+									cb(null, "")
+								} else {
+									cb(null, r.data)
+								}
+							})
+						} else {
+							cb(null, "")
+						}
+
+					}
+				],function(e,r){
+					var patharry = []
+					mui.each(r, function(j, i) {
+						if(i != '') patharry.push(i)
+					})
+					//数据上传
+					var param = {}
+					param.content = vm.content
+					param.location = vm.locations == '所在位置' ? '' : vm.locations
+					param.type = 'school'
+					param.share = this.share
+					param.imgarry = patharry.join(',')
+					API.sendCircle(param, function(e, r) {
+						if(e) {
+							cb(e, null)
+						} else {
+							$api.toastS('发布成功')
+							setTimeout(function(){
+								api.closeWin()
+							},1000)
+						}
+					})					
+					
+				})
+			}
+			
+			var showAction = function() {
+				api.actionSheet({
+					title: '选择图片',
+					cancelTitle: '取消',
+					buttons: ['拍照', '从手机相册选择']
+				}, function(ret, err) {
+					if(ret) {
+						if(ret.buttonIndex == 1) { // 拍照
+							camera()
+						} else if(ret.buttonIndex == 2) { //相册
+							picture()
+						}
+					}
+				});
+			}
+			/**
+			 * 拍照
+			 */
+			var camera = function() {
+				api.getPicture({
+					sourceType: 'camera',
+					encodingType: 'png',
+					mediaValue: 'pic',
+					allowEdit: false,
+					quality: 90,
+					saveToPhotoAlbum: false
+				}, function(ret, err) {
+					// 获取拍照数据并处理
+					if(ret&&ret.data) {
+						imgcompress(ret.data,function(){})						
+					}
+				});
+			}
+			var picture = function() {
+				var max = 6 - vm.imgcount
+				pic.open({type: 'picture',column: 4,max: max,sort: {key: 'time',order: 'desc'}
+				}, function(ret) { // 获取图片数据并处理        	
+					if(ret) {
+						if(ret.eventType == 'confirm') {
+							if(ret.list&&ret.list.length>0){
+								$api.loadingWin()
+								async.series([
+									function(cb){
+										if(ret.list[0]){imgcompress(ret.list[0].path,function(){cb(null,true)})}else{cb(null,true)}
+									},function(cb){
+										if(ret.list[1]){imgcompress(ret.list[1].path,function(){cb(null,true)})}else{cb(null,true)}
+									},function(cb){
+										if(ret.list[2]){imgcompress(ret.list[2].path,function(){cb(null,true)})}else{cb(null,true)}
+									},function(cb){
+										if(ret.list[3]){imgcompress(ret.list[3].path,function(){cb(null,true)})}else{cb(null,true)}
+									},function(cb){
+										if(ret.list[4]){imgcompress(ret.list[4].path,function(){cb(null,true)})}else{cb(null,true)}
+									},function(cb){
+										if(ret.list[5]){imgcompress(ret.list[5].path,function(){cb(null,true)})}else{cb(null,true)}
+									}
+								],function(e,r){
+									$api.closeLoadingWin()
+								})	
+							}
+						}
+					}
+				});
+			}
+			/**
+			 * 图片压缩
+			 * @param {Object} file
+			 * @param {Object} cb
+			 */
+			var imgcompress = function(file,cb){				
+				lrz(file,{width: 1024})
+				.then(function(rst) { // 处理成功会执行									
+					vm.imgs.push(rst.base64)
+					vm.imgcount++
+				})
+				.catch(function(err) {
+					console.log(err)									
+				})
+				.always(function() {
+					cb()								
+				});
+			}
+			/**
+			 * 启动定位
+			 */
+			var initLocation = function() {
+				// 加载百度地图模块
+
+				// 获取当前经纬度
+				bMap.getLocation({
+					autoStop: true, // 定位到经纬度后，立即自动停止定位服务
+					filter: 100000 // 基本无需处理位置更新的情况
+				}, function(ret, err) {
+					if(ret.status) {
+						// 根据经纬度获得城市名称
+						getName(ret);
+					} else {
+
+					}
+				});
+			}
+			// 根据经纬度获得城市名称
+			var getName = function(location_) {
+				bMap.getNameFromCoords({
+					lon: location_.lon,
+					lat: location_.lat
+				}, function(ret, err) {
+
+					if(ret.status) {
+						vm.locations = ret.address
+
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

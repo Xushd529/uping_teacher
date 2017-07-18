@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<widget id="A6948379762955" version="0.0.1">
+  <name>uping_teacher</name>
+  <description>优评网教师2.0</description>
+  <author email="xsd529@163.com" href="http://www.apicloud.com">Xushd</author>
+  <content src="index.html"/>
+  <preference name="pageBounce" value="false"/>
+  <preference name="appBackground" value="rgba(0,0,0,0.0)"/>
+  <preference name="windowBackground" value="rgba(0,0,0,0.0)"/>
+  <preference name="frameBackgroundColor" value="rgba(0,0,0,0.0)"/>
+  <preference name="hScrollBarEnabled" value="true"/>
+  <preference name="vScrollBarEnabled" value="true"/>
+  <preference name="autoLaunch" value="false"/>
+  <preference name="fullScreen" value="false"/>
+  <preference name="autoUpdate" value="true"/>
+  <preference name="smartUpdate" value="false"/>
+  <preference name="debug" value="true"/>
+  <preference name="statusBarAppearance" value="true"/>
+  <permission name="readPhoneState"/>
+  <permission name="camera"/>
+  <permission name="record"/>
+  <permission name="location"/>
+  <permission name="fileSystem"/>
+  <permission name="internet"/>
+  <permission name="bootCompleted"/>
+  <permission name="hardware"/>
+  <access origin="*"/>
+  <feature name="ajpush">
+    <param name="app_key" value="3f7551fcdc90305cd57bc992"/>  
+    <param name="channel" value="xushd"/>
+  </feature>
+  <feature name="bMap">
+    <param name="android_api_key" value="yDqtcLqOFDj0jtWOO7RlZTWHb8ghdPoS"/>
+    <param name="ios_api_key" value="laBREBxArQpu4kZS9Yb9Aktkt6SkQcR8"/>
+  </feature>
+</widget>

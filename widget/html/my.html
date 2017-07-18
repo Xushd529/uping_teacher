@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>我的</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" href="../css/mui/mui.min.css" />
+    <link rel="stylesheet" href="../css/iconfont.css" />
+    <link rel="stylesheet" href="../css/app.css" />
+   
+    <style>
+    	.head {
+		    position: relative;
+		    width: 100%;
+		    height: 2.8rem;		    
+		    background: url(../image/headbg.png) no-repeat;
+		    background-size: 100% 2.8rem;
+		}
+		.head-img {
+		    position: absolute;
+		    top: 1.35rem;
+		    left: 0.22rem;
+		    width: 1.2rem;
+		    height: 1.2rem;		    	   
+		    background-color: none;		
+		   
+		}
+		.head-img img {
+		    width: 1.2rem;
+		    height: 1.2rem;
+		    border-radius: 5%;    
+		}
+		.head-dsb {
+		    position: absolute;
+		    top: 1.48rem;
+		    left: 1.58rem;
+		}
+		.seting{
+			position: absolute;
+		    right: 10px;
+		    top: 35px;
+		}
+		.head-dsb p {
+		    font-size: 0.28rem;
+		    color: #F2F2F2
+		}
+		.dsb-id {
+		    margin-top: 0.08rem;
+		}
+		.mui-table-view-cell {
+		    height: 1rem;
+		    line-height: 1rem;
+		}
+		.mui-table-view-cell a{
+    		height: 1rem;
+    		line-height: 1rem;
+    		padding: 0px!important;
+    		padding-left: 0.3rem!important;
+    	}
+    </style>
+</head>
+<body style="height: 100%;">
+	<div id="app" style="height: 100%;background: #F2F2F2;">
+		<div class="head">
+			<div class="head-img ">
+		    	<img :src="userInfo.headImg" >
+		    </div>
+		    <div class="head-dsb">
+		    	<p class="dsb-name">{{userInfo.name}}({{userInfo.phone}})</p>
+		        <p class="dsb-id">一年级五班 班主任</p>
+		    </div>
+		    <div class="seting">
+		    	<span class="mui-icon iconfont icon-shezhi" v-tap="{methods:seting}"></span>
+		    </div>
+		</div>
+		<div class="mui-content" style="background: #F2F2F2;">
+			<div style="margin-bottom: 0.3rem;margin-top: 1px;">
+				<ul class="mui-table-view mui-table-view-chevron mui-li-list" >
+					<li class="mui-table-view-cell">
+						<a  class="mui-navigate-right iconfont icon-caikejilu">
+							<span class="text_title">抽课</span>
+						</a>
+					</li>				
+					<li class="mui-table-view-cell">
+						<a  class="mui-navigate-right iconfont icon-kebiao">
+							<span class="text_title">课表</span>
+						</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a class="mui-navigate-right iconfont icon-banji">
+							<span class="text_title">我的教学班</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div>
+				<ul class="mui-table-view mui-table-view-chevron mui-li-list" >
+					<li class="mui-table-view-cell">
+						<a  class="mui-navigate-right iconfont icon-xinxi">
+							<span class="text_title">历史记录</span>
+						</a>
+					</li>				
+					<li class="mui-table-view-cell">
+						<a  class="mui-navigate-right iconfont icon-upload">
+							<span class="text_title">数据同步</span>
+						</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a class="mui-navigate-right iconfont icon-jifen">
+							<span class="text_title">积分</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js" ></script>
+<script type="text/javascript" src="../script/app.js" ></script>
+<script type="text/javascript" src="../script/mui.min.js" ></script>
+<script type="text/javascript" src="../script/interface.js" ></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el:'#app',
+		data:{
+			userInfo:{headImg:'../image/100.svg'}
+		},
+		methods:{
+			seting:function() {
+				openWin('set','./my/set.html')
+			}
+		}
+	})
+	apiready = function(){		
+		init()
+		//注册监听是否登录成功
+		api.addEventListener({
+		    name: 'loginSuccess'
+		}, function(ret, err) {
+			var userInfo = $api.getStorage('userInfo')
+			vm.userInfo = userInfo			
+		});
+	};
+	
+	var init = function(){
+		var userInfo = $api.getStorage('userInfo')
+		if(userInfo){
+			vm.userInfo = userInfo
+		}
+		//同步用户信息
+		API.getUserInfo(function(e,r){			
+			if(e){
+				$api.toastS('用户信息同步失败')
+			}else{
+				console.log(JSON.stringify(r.data))
+				$api.setStorage('userInfo',r.data)
+				vm.userInfo = r.data
+			}
+		})
+		
+	}
+</script>
+</html>

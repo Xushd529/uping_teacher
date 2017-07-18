@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>圈子</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/mui/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css"/>
+
+    <style>
+    	h4{
+		    padding: 0.15rem;
+		    font-size: 0.3rem;
+		
+		    font-weight: normal;
+		    border-bottom: 1px solid #d9d9d9;
+		    margin-bottom:0.15rem;
+		}
+
+		.list-wrap{
+		    margin-bottom: 0.1rem;
+		}
+
+		.app-list {
+		    overflow: hidden;
+		    padding:0 0.1rem;
+		 }
+		.app-list li {
+		    box-sizing: border-box;
+		    float: left;
+		    width: 25%;		   
+		    padding-right: 0.1rem;
+		    margin-bottom: 0.15rem;
+		}
+		
+		.app-list li:nth-child(4n){
+		    padding-right:0;
+		}
+		
+		
+		.app-list li .app-wrap{
+		    background: #f1f1f1;
+		    height: 1.3rem;
+		    min-height: 74px;
+		    font-size: 0.35rem;
+		    border:.5px solid #ccc;
+		    text-align: center;
+		}
+	
+		
+	
+		.app-list li .app-wrap a{
+		    color: #000;
+		}		
+		
+		.app-list li .app-wrap .iconfont:before{
+		    margin-right: 0px!important;		 
+		    font-size: 0.8rem;		   
+		    line-height: 0.9rem;		    
+		    text-align: center;
+		    position: relative;
+		    top:0.08rem;
+		}		
+		.app-list li .app-wrap .text_title{
+		    display: block;
+		    font-size: 0.25rem;
+		    margin-top: 0.05rem;
+		}
+	
+    </style>
+</head>
+<body >
+	<div id="app">		
+		<div class="mui-content" style="background: #FFF;">	
+			<div id="slider" class="mui-slider" >
+				<img src='http://data.uping.wang/slide/20161003153434.png'>
+			</div>
+			<article style="padding-bottom: 54px;">
+				<div class="list-wrap">
+					 <h4>优评</h4>
+					 <ul class="app-list">
+					 	<li>
+	                        <div class="app-wrap">
+	                            <a class="iconfont icon-pingjia">
+									<span class="text_title">教师评</span>
+								</a>
+	                        </div>	                        
+	                    </li>
+	                    <li>
+	                        <div class="app-wrap">
+	                           <a class="iconfont icon-jiancha">
+									<span class="text_title">雅行评比</span>
+								</a>
+	                        </div>	                        
+	                    </li>
+	                    <li>
+	                        <div class="app-wrap">
+	                           <a class="iconfont icon-yangguang">
+									<span class="text_title">阳光课堂</span>
+								</a>
+	                        </div>
+	                        
+	                    </li>
+	                    <li>
+	                        <div class="app-wrap">
+	                            <a class="iconfont icon-bianji">
+									<span class="text_title">局部测评</span>
+								</a>
+	                        </div>
+	                        
+	                    </li>
+	                    <li>
+	                        <div class="app-wrap">
+	                            <a class="iconfont icon-biaoka">
+									<span class="text_title">标卡</span>
+								</a>
+	                        </div>
+	                        
+	                    </li>
+					 </ul>
+				</div>
+				<div class="list-wrap">
+					 <h4>优评</h4>
+					 <ul class="app-list">
+					 	<li>
+	                        <div class="app-wrap">
+	                            <a class="iconfont icon-xueye" >
+									<span class="text_title">学业考评</span>
+								</a>
+	                        </div>	                        
+	                    </li>
+	                    <li>
+	                        <div class="app-wrap">
+	                            <a class="iconfont icon-xinjian" >
+									<span class="text_title">心理测评</span>
+								</a>
+	                        </div>	                        
+	                    </li>
+	                    <li>
+	                        <div class="app-wrap">
+	                            <a class=" iconfont icon-yundong">
+									<span class="text_title">体育测评</span>
+								</a>
+	                        </div>	                        
+	                    </li>
+	                    <li>
+	                        <div class="app-wrap">
+	                            <a class=" iconfont icon-jieduan" >
+									<span class="text_title">评价报告</span>
+								</a>
+	                        </div>	                        
+	                    </li>
+	                 </ul>
+				</div>
+			</article>			
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.min.js" ></script>
+<script type="text/javascript" src="../script/mui.min.js" ></script>
+<script type="text/javascript" src="../script/app.js" ></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el:'#app',
+		data:{
+			
+		},
+		methods:{
+
+		}
+	})
+	
+	apiready = function(){
+		
+	};
+</script>
+</html>

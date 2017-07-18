@@ -1,0 +1,231 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>主页面</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <link rel="stylesheet" type="text/css" href="./css/mui/mui.min.css" />
+    <link rel="stylesheet" type="text/css" href="./css/app.css" />
+    <link rel="stylesheet" type="text/css" href="./css/iconfont.css" />
+
+</head>
+
+<body>
+    <div id="app">
+        <nav class="mui-bar mui-bar-tab">
+            <a class="mui-tab-item" v-for="(vo,index) in tlist" :class="{'mui-active':index == cur_index}" v-tap="{methods:tb_change,i:index}">
+                <span class="mui-icon iconfont" :class="vo.ico"></span>
+                <span class="mui-tab-label">{{vo.title}}</span>
+            </a>
+        </nav>
+    </div>
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/vue.js"></script>
+<script type="text/javascript" src="./script/app.js"></script>
+<script type="text/javascript" src="./script/interface.js"></script>
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            cur_index: 0,
+            tlist: [{
+                title: '首页',
+                ico: 'icon-xiaoxitongzhi'
+            }, {
+                title: '优评',
+                ico: 'icon-daipingjia'
+            }, {
+                title: '查看',
+                ico: 'icon-chadingdan'
+            }, {
+                title: '我的',
+                ico: 'icon-wode'
+            }],
+            msgIdArry:[]
+        },
+        methods: {
+            tb_change: function(param) {
+                var index = param.i
+                if (vm.cur_index == index) return;
+                vm.cur_index = index;
+                api.setFrameGroupIndex({
+                    name: 'MainGroup',
+                    index: index
+                });
+            }
+        }
+    });
+
+
+    var jpush = null;
+    apiready = function() {
+        api.setStatusBarStyle({
+            style: 'light'
+        })
+        $api.setStorage('SYSTEMTYPE', api.systemType);
+        $api.setStorage('SYSTEMVERSION', api.systemVersion);
+        $api.setStorage('FULLSCREEN', api.fullScreen);
+        $api.setStorage('IOS7STATUSBARAPPEARANCE', api.iOS7StatusBarAppearance);
+
+
+        //判断是否登录
+        var token = $api.getStorage('token')
+            //创建frame
+        createFrame()
+        if (token) {
+            //验证TOKEN有效性
+            API.checktoken(token, function(e, r) {
+                console.log(JSON.stringify(r))
+                if (e) {
+                    login()
+                } else {
+                    init()
+                }
+            })
+        } else {
+            login()
+        }
+
+    };
+    var login = function() {
+            //注册监听是否登录成功
+            api.addEventListener({
+                name: 'loginSuccess'
+            }, function(ret, err) {
+                init();
+            });
+            openWinNoAnimation('login', './html/login/login.html')
+        }
+    //APP 初始化
+    var init = function() {
+
+            api.addEventListener({
+                name: 'tbChange'
+            }, function(ret, err) {
+                var index = ret.value.index
+                vm.cur_index = index;
+                api.setFrameGroupIndex({
+                    name: 'MainGroup',
+                    index: index
+                });
+            });
+
+            var userInfo = $api.getStorage('userInfo')
+                //极光推送
+            jpush = api.require('ajpush');
+            jpush.getRegistrationId(function(ret) {
+                var registrationId = ret.id;
+            });
+
+            //用户分区
+            var param = {
+                alias: 'uping',
+                tags: [userInfo.schoolId]
+            };
+            jpush.bindAliasAndTags(param, function(ret) {
+                var statusCode = ret.statusCode;
+            });
+
+            /**
+             * 监听在线推送消息
+             * @type {[type]}
+             */
+            jpush.setListener(
+                function(ret) {
+                  var extra = ret.extra;
+                  if(api.systemType!='ios'){
+                    extra = JSON.parse(extra);
+                  }
+                  if(vm.msgIdArry.indexOf(extra.id)>=0)return;
+                  vm.msgIdArry.push(extra.id);
+                  alert('online:'+extra.id);
+                }
+            );
+            /**
+             * Android 点击通知
+             * @type {String}
+             */
+            api.addEventListener({
+                name: 'appintent'
+            }, function(ret, err) {
+                if (ret && ret.appParam.ajpush) {
+                    var msg = ret.appParam.ajpush;
+                    var extra = JSON.parse(msg.extra);
+                    alert("Android:"+extra.id);
+                }
+            })
+            /**
+             * IOS 点击通知
+             * @type {String}
+             */
+            api.addEventListener({
+                name: 'noticeclicked'
+            }, function(ret, err) {
+                if (ret && ret.value) {
+                   var msg = ret.value;
+                   var extra = msg.extra;
+                   alert("IOS:"+extra.id);
+                }
+            })
+            api.addEventListener({
+                name: 'pause'
+            }, function(ret, err) {
+                jpush.onPause(); //监听应用进入后台，通知jpush暂停事件
+            })
+            api.addEventListener({
+                name: 'resume'
+            }, function(ret, err) {
+                jpush.onResume(); //监听应用恢复到前台，通知jpush恢复事件
+            })
+        }
+
+        /**
+         * 创建TAB
+         */
+    var createFrame = function() {
+        api.openFrameGroup({
+            name: 'MainGroup', //app首页frame组预加载
+            background: '#FFF',
+            scrollEnabled: false,
+            preload: 4,
+            rect: {
+                x: 0,
+                y: 0,
+                w: api.winWidth,
+                h: api.winHeight - $api.dom('nav').offsetHeight - 1
+            },
+            index: vm.cur_index,
+            frames: [{
+                name: 'home',
+                url: './html/home.html',
+                bgColor: '#FFF',
+                bounces: false,
+                vScrollBarEnabled: false
+            }, {
+                name: 'ping',
+                url: './html/ping.html',
+                bgColor: '#FFF',
+                bounces: false,
+                vScrollBarEnabled: false
+            }, {
+                name: 'look',
+                url: './html/look.html',
+                bgColor: '#FFF',
+                bounces: false,
+                vScrollBarEnabled: false
+            }, {
+                name: 'my',
+                url: './html/my.html',
+                bgColor: '#FFF',
+                bounces: false,
+                vScrollBarEnabled: false
+            }]
+        }, function(ret, err) {});
+    }
+</script>
+
+</html>

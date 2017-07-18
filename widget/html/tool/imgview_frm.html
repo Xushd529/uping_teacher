@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+	    <link rel="stylesheet" href="../../css/mui/mui.min.css" />
+	    <style>
+	    	body{
+	    		background: none;
+	    	}
+	    	.mui-preview-header {
+			    height: 64px;
+			    background: rgba(0, 0, 0, 0.4);
+			    top: 0;		
+			    padding-top: 20px;	   
+			}
+			.mui-preview-header a{
+				color: #FFF;
+			}
+			.mui-title{
+				color: #FFF;
+			}
+			a:active{
+				 color: #FFF;
+				 opacity: 1!important;
+			}
+			a:hover{
+				opacity: 1!important;
+			}
+			.fade-enter-active, .fade-leave-active {
+			  transition: opacity .5s
+			}
+			.fade-enter, .fade-leave-active {
+			  opacity: 0
+			}
+	    </style>
+	</head>
+	<body>
+		<div id="app">
+		<transition name="fade">
+			<header id="header" class="mui-bar mui-bar-transparent mui-preview-header" v-show='headshow'>	
+				<a class="mui-icon mui-icon-left-nav mui-pull-left" v-tap="{methods:back}"></a>
+				<a class="mui-icon mui-icon-download mui-pull-right" v-tap="{methods:save}"></a>
+				<h1 class="mui-title">{{now}}/{{total}}</h1>			
+			</header>
+		</transition>
+		</div>
+	</body>
+</html>
+<script type="text/javascript" src="../../script/api.js" ></script>
+<script type="text/javascript" src="../../script/vue.min.js" ></script>
+<script type="text/javascript" src="../../script/app.js" ></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el:"#app",
+		data:{
+			now:1,
+			total:0,
+			headshow:true
+		},
+		methods:{
+			back:function(){
+				api.closeWin()
+			},
+			save:function(){
+				api.sendEvent({
+				    name: 'imgsave',
+				    extra: {
+				        index: vm.now				     
+				    }
+				});
+			}
+		}
+	})
+	apiready = function(){
+		api.setFullScreen({
+		    fullScreen: false
+		});
+		
+		vm.total = api.pageParam.total
+		vm.now = api.pageParam.index+1
+		api.addEventListener({name: 'imgchange'}, function(ret, err) {
+		   vm.now = ret.value.index+1
+		});
+		api.addEventListener({name: 'imgclick'}, function(ret, err) {
+		  vm.headshow = !vm.headshow
+		});
+	}
+	
+</script>

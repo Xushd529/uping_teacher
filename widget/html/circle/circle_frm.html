@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+	    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	    <title>demo</title>
+	    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+	    <link rel="stylesheet" type="text/css" href="../../css/mui/mui.min.css"/>
+	    <link rel="stylesheet" type="text/css" href="../../css/app.css"/>
+	    <link rel="stylesheet" type="text/css" href="../../css/iconfont.css" />
+	   	<link rel="stylesheet" type="text/css" href="../../css/circle.css" />
+	   	<style>
+	   		
+	   	</style>
+	</head>
+	<body style="height: 100%;">
+		<div class="mui-content" id="app" style="height: 100%;" >						
+			<div class="header">		
+		        <img id='bg' :src="bgImg">		
+		        <p id="user-name" class="data-name"></p>		
+		        <img id="avt" class="data-avt" :src="headImg">		
+		    </div>
+			    <div id="main">
+			    	<div id="list">
+			    		<ul>
+			    			
+			    			<li v-for='(vo,j) in list'  v-bind:key="vo.circleId">
+			    				<div class="po-avt-wrap">
+				                    <img class="po-avt data-avt" :src="vo.userImg">
+				                </div>
+			                 	<div class="po-cmt">
+			                 		<div class="po-hd">
+				                        <p class="po-name">
+				                        	<span class="data-name" >{{vo.userName}}</span>
+				                        </p>
+				                        <p class="post">{{vo.content}}</p>
+				                        <div v-if="vo.imgCount==1" class="img1">
+				                        	<img v-for='(img,index) in vo.imgArry' :src="img" 
+				                        		v-tap="{methods:viewimg,arry:vo.imgArry,index:index}">
+				                        </div>
+				                        <div v-else class="imgs">			                              
+				                        	<img v-for='(img,index) in vo.imgArry' 
+				                        		src="../../image/100.svg" 
+				                        		:data-src="img" 				                        		
+				                        		v-tap="{methods:viewimg,arry:vo.imgArry,index:index}">
+				                        </div>
+				                        <p class="time">{{vo.time}}</p>
+				                        <img v-tap='{methods:operateF,id:vo.circleId}' class="c-icon" src="../../image/2_c.png">
+								        <transition name="slide-fade">
+								        <div class="clickBtn" v-show='operate==vo.circleId'>
+								 		  <a v-if='vo.mylike' class="zan" v-tap="{methods:likeFC,id:vo.circleId,index:j}">取消</a>
+								 		  <a v-else class="zan" v-tap="{methods:likeF,id:vo.circleId,index:j}">点赞</a>
+								    	  <a class="ping" v-tap="{methods:commnetF,id:vo.circleId,index:j}">评论</a>
+								        </div>
+								        </transition>
+				                    </div>
+				                    <div class="r" v-show='vo.like||vo.commCount'></div>
+				                    <div class="cmt-wrap" v-show='vo.like||vo.commCount'>
+				                        <div class="like" v-show='vo.like'><img src="../../image/3_l.png">
+				                        	{{vo.like}}
+				                        </div>
+				                        <div class="cmt-list" v-if="vo.commCount">
+					                        <p v-for='c in vo.commnet' v-tap="{methods:commtap,id:c.id,index:j}">
+					                        	<span>{{c.userName}}：</span>
+					                        	{{c.comment}}
+					                        	<i v-if="c.mycomment&&comdel==c.id" class="mui-icon iconfont icon-shanchu comdel" v-tap="{methods:delcomm,id:c.id,cid:vo.circleId}"></i>
+					                        </p>					                        
+				                        </div>
+				                    </div>
+			                 	</div>
+			    			</li>	
+			    			
+	          			</ul>
+			    	</div>
+			    </div>		   
+		    </transition>
+		    <div id="comment" class="pinglun" v-if="operateinput">
+				<textarea autofocus id="input_commnet" v-model='commtext' maxlength="500" placeholder="请输入评论内容"  maxlength="100" ></textarea>
+				<button id="send" class="mui-btn-success" v-tap="{methods:subcomm}">评论</button>
+			</div>
+		    <div class="mui-backdrop mui-active" v-if='operate' @touchstart="operateF(operate)"></div>
+		    <div class="mui-backdrop mui-active" v-if='operateinput' @touchstart="operateFIN()"></div>
+		</div>
+		
+		<script type="text/javascript" src="../../script/api.js"></script>
+		<script type="text/javascript" src="../../script/vue.js" ></script>
+		<script type="text/javascript" src="../../script/mui.min.js" ></script>		
+		<script type="text/javascript" src="../../script/app.js" ></script>
+		<script type="text/javascript" src="../../script/lazy-load-img.min.js" ></script>
+		<script type="text/javascript" src="../../script/interface.js" ></script>
+		<script type="text/javascript" src="../../script/autoTextarea.js" ></script>
+		<script>
+			var vm = new Vue({
+				el:"#app",
+				data:{
+					loading:true,
+					headImg:'../../image/100.svg',					
+					bgImg:'../../image/headbg.png',
+					topTime:'',
+					lastTime:'',
+					operate:0,
+					commtext:'',
+					commCircleId:0,
+					commIndex:0,
+					operateinput:0,
+					comdel:0,
+					list:[{"circleId":1020,"commCount":0,"commnet":[],"content":"nxjxjxjx记住那些不鸟你","imgArry":["http://data.uping.wang/cicle/1498656585966520.jpg","http://data.uping.wang/cicle/1498656586475913.jpg","http://data.uping.wang/cicle/1498656588550785.jpg","http://data.uping.wang/cicle/1498656591282362.jpg"],"imgCount":4,"like":"","mylike":false,"time":"3分钟前","timeStamp":1498656592000,"userImg":"","userName":"张无忌"}]
+				},
+				methods:{
+					viewimg:function(param){
+						openWin('imgview','../tool/imgview.html',{arry:param.arry,index:param.index})						
+					},operateF:function(param){
+						this.operate = this.operate == param.id?0:param.id
+					},operateFIN:function(){
+						this.operateinput = 0
+						vm.commtext=''
+						document.getElementById("input_commnet").blur()
+					},likeF:function(param){
+						var index = param.index	
+						vm.operate=0
+						//点赞
+					  	API.likeCicle(param.id,function(e,r){
+					  		if(e){$api.toastS(e)}else{
+					  			var newLikes = r.data
+					  			vm.list[index].like = newLikes
+					  			vm.list[index].mylike = true
+					  			
+					  		}
+					  	})
+					},likeFC:function(param){
+						var index = param.index	
+						vm.operate = 0
+						//取消点赞
+						API.likeCicleCancle(param.id,function(e,r){
+							if(e){$api.toastS(e)}else{
+								var newLikes = r.data
+					  			vm.list[index].like = newLikes
+					  			vm.list[index].mylike = false
+					  			
+							}
+						})
+					},commnetF:function(param){						
+						vm.operate = 0
+						vm.operateinput = 1
+						vm.commCircleId = param.id
+						vm.commIndex = param.index
+						setTimeout(function(){
+							var text = document.getElementById("input_commnet")	
+							text.focus()
+							autoTextarea(text)// 调用输入框输入时改变高度的js
+						},300)        				
+					},subcomm:function(){
+						if(vm.commtext){	
+							vm.operateinput = 0
+							var param = {}
+							param.circleId = vm.commCircleId
+							param.comment = vm.commtext
+							API.commentCircle(param,function(e,r){
+								if(e){$api.toastS(e);vm.commtext=''}else{
+									var commCount =  r.message
+									var commnet = r.data
+									vm.list[vm.commIndex].commnet = commnet
+					  				vm.list[vm.commIndex].commCount = commCount		
+					  				vm.commtext=''
+								}
+							})
+						}else{
+							$api.toastS('输入评论内容')
+						}
+					},commtap:function(param){						
+						vm.comdel = (vm.comdel==param.id)?'':param.id
+						vm.commIndex = param.index
+					},delcomm:function(param){
+						vm.comdel = ''
+						API.commentCircleDel(param.cid,param.id,function(e,r){
+							if(e){$api.toastS(e)}else{								
+								var commCount =  r.message									
+								var commnet = r.data								
+								vm.list[vm.commIndex].commnet = commnet
+								if(commCount=='0')commCount=Number(0)								
+				  				vm.list[vm.commIndex].commCount = commCount	
+							}
+						})
+					}
+					
+					
+				}
+			})		
+			
+			var photoBrowser = null
+			apiready = function(){
+				var userInfo = $api.getStorage('userInfo')
+				vm.headImg = userInfo.headImg							
+				vm.loading = false				
+				init()		
+				photoBrowser = api.require('photoBrowser');
+		        api.setCustomRefreshHeaderInfo({
+		            bgColor : '#FFF',
+		            image : {
+		                pull : 'widget://image/pull.png',
+		                transform : [
+		                	'widget://image/pull_end_image_frame_01.png',
+		                	'widget://image/pull_end_image_frame_02.png',
+		                	'widget://image/pull_end_image_frame_03.png',
+		                	'widget://image/pull_end_image_frame_04.png',
+		                	'widget://image/pull_end_image_frame_05.png'
+		            	],
+		                load : [
+		                	'widget://res/loading1.png',
+		                	'widget://res/loading2.png',
+		                	'widget://res/loading3.png',
+		                	'widget://res/loading4.png',
+		                	'widget://res/loading5.png',
+		                	'widget://res/loading6.png',
+		                	'widget://res/loading7.png',
+		                	'widget://res/loading8.png',
+		                	'widget://res/loading9.png',
+		                	'widget://res/loading10.png',
+		                	'widget://res/loading11.png',
+		                	'widget://res/loading12.png',
+		                	
+		            	]
+		            }
+		        }, function() {
+		        	console.log(vm.topTime)
+		        	API.getCircle(1,2,vm.topTime,function(e,r){
+						if(e){
+							console.log(JSON.stringify(e))
+						}else{							
+							var list = r.data
+							var length = list.length
+							if(length>0){
+								vm.list = list.concat(vm.list)
+								vm.topTime = list[0].timeStamp
+							}
+							lazyLoadImg.start()
+						}
+						api.refreshHeaderLoadDone()
+					})
+		        	
+//		            //下拉刷新被触发，自动进入加载状态，使用 api.refreshHeaderLoadDone() 手动结束加载中状态
+//		            setTimeout(function(){
+//						
+//		            }, 3000);
+		        });
+		        
+		         //上拉加载
+		        api.addEventListener({
+		            name:'scrolltobottom',
+		            extra:{
+		                threshold:0 //设置距离底部多少距离时触发，默认值为0，数字类型
+		            }
+		        }, function(ret, err){
+		        	$api.loadingWin()
+		            API.getCircle(1,1,vm.lastTime,function(e,r){
+						if(e){
+							console.log(JSON.stringify(e))
+						}else{						
+							var list = r.data
+							var length = list.length
+							if(length>0){
+								vm.list = vm.list.concat(list)
+								vm.lastTime = list[length-1].timeStamp
+							}
+							lazyLoadImg.start()
+						}
+						$api.closeLoadingWin()
+					})
+		        });
+		    }
+        
+		    function fnRefreshHeaderLoading() {
+		        api.refreshHeaderLoading();
+		    };
+		   
+		    //数据初始化
+		    var init = function(){
+		    	var userInfo = $api.getStorage('userInfo')	    	
+		    	API.getCircle(1,1,getTimestamp(),function(e,r){
+					if(e){
+						
+					}else{
+						var list = r.data
+						var length = list.length
+						console.log(JSON.stringify(list))
+						if(length>0){
+							vm.list = list
+							vm.topTime = list[0].timeStamp
+							vm.lastTime = list[length-1].timeStamp
+							lazyLoadImg()
+						}
+						
+					}
+				})
+		    }		    
+		</script>
+	</body>
+</html>
